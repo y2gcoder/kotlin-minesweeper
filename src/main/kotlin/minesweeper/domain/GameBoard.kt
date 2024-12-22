@@ -22,13 +22,16 @@ class GameBoard private constructor(
         return GameBoard(area, Cells(allOpenedCells))
     }
 
-    fun currentState(): GameBoardState {
-        return GameBoardState(
-            countOfTotalCells = cells.size,
-            countOfClosedCells = cells.count { it is ClosedCell },
-            countOfLandmineCells = cells.count { it is LandmineCell },
-            countOfTotalLandmines = cells.count { (it is ClosedCell && it.hasLandmine) || (it is LandmineCell) },
-        )
+    fun gameState(): GameState {
+        val countOfClosedCells = cells.count { it is ClosedCell }
+        val countOfLandmineCells = cells.count { it is LandmineCell }
+        val countOfTotalLandmines = cells.count { (it is ClosedCell && it.hasLandmine) } + countOfLandmineCells
+
+        return when {
+            countOfLandmineCells > 0 -> GameState.LOSE
+            countOfClosedCells == countOfTotalLandmines -> GameState.WIN
+            else -> GameState.CONTINUE
+        }
     }
 
     companion object {

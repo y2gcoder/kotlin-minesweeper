@@ -2,10 +2,10 @@ package minesweeper.ui
 
 import minesweeper.domain.CountOfLandmines
 import minesweeper.domain.GameBoard
+import minesweeper.domain.GameState
 import minesweeper.domain.cell.Location
 import minesweeper.domain.service.GameBoardCellOpener
 import minesweeper.domain.service.GameBoardCreator
-import minesweeper.domain.service.GameState
 import minesweeper.ui.ConsoleInput.inputCountOfLandmines
 import minesweeper.ui.ConsoleInput.inputHeight
 import minesweeper.ui.ConsoleInput.inputSelectLocation
@@ -41,19 +41,16 @@ class MinesweeperController(
 
     private fun playGameLoop(gameBoard: GameBoard) {
         var currentGameBoard = gameBoard
-        var gameState = GameState.from(currentGameBoard.currentState())
 
-        while (gameState == GameState.CONTINUE) {
+        while (currentGameBoard.gameState() == GameState.CONTINUE) {
             displayCurrentGameBoard(currentGameBoard)
 
             val location = inputSelectLocation()
 
             currentGameBoard = processOpenCell(currentGameBoard, location)
-
-            gameState = GameState.from(currentGameBoard.currentState())
         }
 
-        handleGameEnd(gameState)
+        handleGameEnd(currentGameBoard.gameState())
     }
 
     private fun processOpenCell(

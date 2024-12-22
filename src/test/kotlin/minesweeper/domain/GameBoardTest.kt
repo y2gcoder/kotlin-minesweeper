@@ -6,6 +6,7 @@ import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.shouldBe
 import minesweeper.domain.cell.ClosedCell
+import minesweeper.domain.cell.LandmineCell
 import minesweeper.domain.cell.Location
 import minesweeper.domain.cell.NumberCell
 import minesweeper.domain.cell.NumberOfAdjacentMines
@@ -138,17 +139,93 @@ class GameBoardTest : BehaviorSpec({
         }
     }
 
-    given("5x5 의 셀로 만든 게임판에서") {
-        val sut = GameBoard.from(fiveByFiveCellsWithFiveLandmines)
+    given("게임판에 열린 지뢰 셀이 하나라도 존재하면") {
+        val cells =
+            listOf(
+                ClosedCell(
+                    location = oneByOneLocation,
+                    numberOfAdjacentLandmines = NumberOfAdjacentMines(1),
+                ),
+                ClosedCell(
+                    location = oneByTwoLocation,
+                    numberOfAdjacentLandmines = NumberOfAdjacentMines(1),
+                ),
+                ClosedCell(
+                    location = twoByOneLocation,
+                    numberOfAdjacentLandmines = NumberOfAdjacentMines(1),
+                ),
+                LandmineCell(twoByTwoLocation),
+            )
+        val sut = GameBoard.from(cells)
 
-        `when`("현재 상태를 구하면") {
-            val result = sut.currentState()
+        `when`("해당 게임 상태는") {
+            val result = sut.gameState()
+            then("패배 상태이다") {
+                result shouldBe GameState.LOSE
+            }
+        }
+    }
 
-            then("모든 셀의 수, 닫힌 셀 수, 숫자 셀 수, 지뢰 셀 수를 알 수 있다") {
-                result.countOfTotalCells shouldBe 25
-                result.countOfClosedCells shouldBe 25
-                result.countOfLandmineCells shouldBe 0
-                result.countOfTotalLandmines shouldBe 5
+    given("게임판에 닫힌 셀 수와 전체 지뢰 셀 수가 똑같으면") {
+        val cells =
+            listOf(
+                NumberCell(
+                    location = oneByOneLocation,
+                    numberOfAdjacentLandmines = NumberOfAdjacentMines(1),
+                ),
+                NumberCell(
+                    location = oneByTwoLocation,
+                    numberOfAdjacentLandmines = NumberOfAdjacentMines(1),
+                ),
+                NumberCell(
+                    location = twoByOneLocation,
+                    numberOfAdjacentLandmines = NumberOfAdjacentMines(1),
+                ),
+                ClosedCell(
+                    location = twoByTwoLocation,
+                    hasLandmine = true,
+                    numberOfAdjacentLandmines = NumberOfAdjacentMines.ZERO,
+                ),
+            )
+        val sut = GameBoard.from(cells)
+
+        `when`("해당 게임 상태는") {
+            val result = sut.gameState()
+
+            then("승리 상태이다") {
+                result shouldBe GameState.WIN
+            }
+        }
+    }
+
+    given("게임판에 닫힌 셀이 전체 지뢰 수보다 많으면") {
+        val cells =
+            listOf(
+                NumberCell(
+                    location = oneByOneLocation,
+                    numberOfAdjacentLandmines = NumberOfAdjacentMines(1),
+                ),
+                NumberCell(
+                    location = oneByTwoLocation,
+                    numberOfAdjacentLandmines = NumberOfAdjacentMines(1),
+                ),
+                ClosedCell(
+                    location = twoByOneLocation,
+                    numberOfAdjacentLandmines = NumberOfAdjacentMines(1),
+                ),
+                ClosedCell(
+                    location = twoByTwoLocation,
+                    hasLandmine = true,
+                    numberOfAdjacentLandmines = NumberOfAdjacentMines.ZERO,
+                ),
+            )
+        val sut = GameBoard.from(cells)
+
+        `when`("해당 게임 상태는") {
+            val result = sut.gameState()
+
+            then("지속 상태이다") {
+                result shouldBe GameState.CONTINUE
             }
         }
     }
