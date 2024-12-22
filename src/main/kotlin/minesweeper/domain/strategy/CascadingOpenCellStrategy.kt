@@ -12,41 +12,51 @@ class CascadingOpenCellStrategy : OpenCellStrategy {
         targetCell: Cell,
     ): Cells {
         val candidates = findOpenCandidates(targetCell, originalCells)
-
-        return Cells(originalCells.map { if (candidates.contains(it) && it is ClosedCell) it.open() else it })
+        return Cells(originalCells.map { openCellIfNeeded(candidates, it) })
     }
 
     private fun findOpenCandidates(
         targetCell: Cell,
         originalCells: Cells,
-    ): List<Cell> {
-        val candidates = mutableListOf<Cell>()
-        val queue = ArrayDeque<Cell>()
-        val visitedCells = mutableListOf<Cell>()
+    ): Set<Cell> =
+        buildSet {
+            val locationToCellMap = originalCells.associateBy { it.location }
+            val queue = ArrayDeque<Cell>().apply { add(targetCell) }
+            add(targetCell)
 
-        visitedCells.add(targetCell)
-        queue.add(targetCell)
-        candidates.add(targetCell)
+            while (queue.isNotEmpty()) {
+                val nextCell = queue.removeFirst()
 
-        while (queue.isNotEmpty()) {
-            val nextCell = queue.removeFirst()
-            val allAdjacentLocations =
-                AdjacentLocationDirection.allAdjacentLocations(nextCell.location)
-            allAdjacentLocations.forEach<Location> { adjacentLocation ->
-                val adjacentCell = originalCells.find { it.location == adjacentLocation }
-                adjacentCell?.let { cell ->
-                    if (cell is ClosedCell && cell !in visitedCells && !cell.hasLandmine) {
-                        visitedCells.add(cell)
-                        candidates.add(cell)
-
-                        if (cell.numberOfAdjacentLandmines == NumberOfAdjacentMines.ZERO) {
-                            queue.add(cell)
-                        }
+                getAdjacentCells(nextCell, locationToCellMap)
+                    .filterIsInstance<ClosedCell>()
+                    .filter { it !in this && !it.hasLandmine }
+                    .forEach { adjacentCell ->
+                        add(adjacentCell)
+                        addQueueIfNumberOfAdjacentLandminesIsZero(adjacentCell, queue)
                     }
-                }
             }
         }
 
-        return candidates.toList()
+    private fun getAdjacentCells(
+        nextCell: Cell,
+        locationToCellMap: Map<Location, Cell>,
+    ): List<Cell> {
+        return AdjacentLocationDirection
+            .allAdjacentLocations(nextCell.location)
+            .mapNotNull { locationToCellMap[it] }
     }
+
+    private fun addQueueIfNumberOfAdjacentLandminesIsZero(
+        adjacentCell: ClosedCell,
+        queue: ArrayDeque<Cell>,
+    ) {
+        if (adjacentCell.numberOfAdjacentLandmines == NumberOfAdjacentMines.ZERO) {
+            queue.add(adjacentCell)
+        }
+    }
+
+    private fun openCellIfNeeded(
+        candidates: Set<Cell>,
+        cell: Cell,
+    ): Cell = if (candidates.contains(cell) && cell is ClosedCell) cell.open() else cell
 }
