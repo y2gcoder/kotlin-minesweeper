@@ -21,31 +21,39 @@ class MinesweeperController(
     private val gameBoardCellOpener: GameBoardCellOpener,
 ) {
     fun play() {
+        val gameBoard = initializeGameBoard()
+        playGameLoop(gameBoard)
+    }
+
+    private fun initializeGameBoard(): GameBoard {
         val height = inputHeight()
         val width = inputWidth()
         val countOfLandmines = CountOfLandmines(inputCountOfLandmines())
 
         announceGameStarted()
 
-        var gameBoard = gameBoardCreator.createBoard(height = height, width = width, countOfLandmines = countOfLandmines)
+        return gameBoardCreator.createBoard(
+            height = height,
+            width = width,
+            countOfLandmines = countOfLandmines,
+        )
+    }
 
-        var gameState = GameState.from(gameBoard.currentState())
+    private fun playGameLoop(gameBoard: GameBoard) {
+        var currentGameBoard = gameBoard
+        var gameState = GameState.from(currentGameBoard.currentState())
 
         while (gameState == GameState.CONTINUE) {
-            displayCurrentGameBoard(gameBoard)
+            displayCurrentGameBoard(currentGameBoard)
 
             val location = inputSelectLocation()
 
-            gameBoard = processOpenCell(gameBoard, location)
+            currentGameBoard = processOpenCell(currentGameBoard, location)
 
-            gameState = GameState.from(gameBoard.currentState())
+            gameState = GameState.from(currentGameBoard.currentState())
         }
 
-        when (gameState) {
-            GameState.WIN -> announceGameWin()
-            GameState.LOSE -> announceGameLose()
-            else -> {}
-        }
+        handleGameEnd(gameState)
     }
 
     private fun processOpenCell(
@@ -55,5 +63,13 @@ class MinesweeperController(
         return runCatching { gameBoardCellOpener.openGameBoardCell(gameBoard, location) }
             .onFailure { printException(it) }
             .getOrElse { gameBoard }
+    }
+
+    private fun handleGameEnd(gameState: GameState) {
+        when (gameState) {
+            GameState.WIN -> announceGameWin()
+            GameState.LOSE -> announceGameLose()
+            else -> {}
+        }
     }
 }
