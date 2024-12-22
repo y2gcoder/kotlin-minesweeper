@@ -4,57 +4,36 @@ import minesweeper.domain.cell.Location
 
 object ConsoleInput {
     fun inputHeight(): Int {
-        val height =
-            validatedInput(
-                prompt = "높이를 입력하세요.\n",
-                validate = { input ->
-                    val height = input.trim().toIntOrNull()
-                    when {
-                        height == null -> "숫자를 입력해주세요!"
-                        height <= 0 -> "높이는 양수만 입력 가능합니다: $height"
-                        else -> null
-                    }
-                },
-                transform = { input -> input.trim().toInt() },
-            )
+        val result = inputPositiveInt("높이를 입력하세요.\n")
         println()
-        return height
+        return result
     }
 
     fun inputWidth(): Int {
-        val width =
-            validatedInput(
-                prompt = "너비를 입력하세요.\n",
-                validate = { input ->
-                    val width = input.trim().toIntOrNull()
-                    when {
-                        width == null -> "숫자를 입력해주세요!"
-                        width <= 0 -> "너비는 양수만 입력 가능합니다: $width"
-                        else -> null
-                    }
-                },
-                transform = { input -> input.trim().toInt() },
-            )
+        val result = inputPositiveInt("너비를 입력하세요.\n")
         println()
-        return width
+        return result
     }
 
     fun inputCountOfLandmines(): Int {
-        val countOfLandmines =
-            validatedInput(
-                prompt = "지뢰는 몇 개인가요?\n",
-                validate = { input ->
-                    val countOfLandmines = input.trim().toIntOrNull()
-                    when {
-                        countOfLandmines == null -> "숫자를 입력해주세요!"
-                        countOfLandmines <= 0 -> "지뢰 개수는 양수만 입력 가능합니다: $countOfLandmines"
-                        else -> null
-                    }
-                },
-                transform = { input -> input.trim().toInt() },
-            )
+        val result = inputPositiveInt("지뢰는 몇 개인가요?\n")
         println()
-        return countOfLandmines
+        return result
+    }
+
+    private fun inputPositiveInt(prompt: String): Int {
+        return validatedInput(
+            prompt = prompt,
+            validate = { input ->
+                val value = input.trim().toIntOrNull()
+                when {
+                    value == null -> "숫자를 입력해주세요!"
+                    value <= 0 -> "양수만 입력 가능합니다: $value"
+                    else -> null
+                }
+            },
+            transform = { input -> input.trim().toInt() },
+        )
     }
 
     fun inputSelectLocation(): Location {
@@ -110,6 +89,7 @@ object ConsoleInput {
 
     private fun <T> handleErrorMessage(errorMessage: String?): Result<T> {
         println(errorMessage)
+        println()
         return Result.failure(IllegalArgumentException(errorMessage))
     }
 
