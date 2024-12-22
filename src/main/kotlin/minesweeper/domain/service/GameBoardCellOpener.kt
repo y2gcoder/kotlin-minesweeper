@@ -2,11 +2,8 @@ package minesweeper.domain.service
 
 import minesweeper.domain.GameBoard
 import minesweeper.domain.cell.Location
-import minesweeper.domain.strategy.OpenCellStrategyHandler
 
-class GameBoardCellOpener(
-    private val openCellStrategyHandler: OpenCellStrategyHandler = OpenCellStrategyHandler(),
-) {
+class GameBoardCellOpener {
     fun openGameBoardCell(
         gameBoard: GameBoard,
         location: Location,

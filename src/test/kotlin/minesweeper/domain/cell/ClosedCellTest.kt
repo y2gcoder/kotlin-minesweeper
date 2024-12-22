@@ -4,6 +4,8 @@ import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
 import minesweeper.domain.oneByOneLocation
+import minesweeper.domain.strategy.CascadingOpenCellStrategy
+import minesweeper.domain.strategy.SingleOpenCellStrategy
 
 class ClosedCellTest : BehaviorSpec({
     given("row = 1, column = 1인 위치를 받아") {
@@ -87,6 +89,53 @@ class ClosedCellTest : BehaviorSpec({
 
                 sut.hasLandmine shouldBe false
                 result.hasLandmine shouldBe true
+            }
+        }
+    }
+
+    given("지뢰가 있는 닫힌 셀은") {
+        val location = oneByOneLocation
+        val sut = ClosedCell(location = location, hasLandmine = true)
+
+        `when`("오픈 셀 전략으로") {
+            val result = sut.findOpenStrategy()
+
+            then("단일 셀 오픈 전략을 가지고 있다") {
+                result.shouldBeInstanceOf<SingleOpenCellStrategy>()
+            }
+        }
+    }
+
+    given("지뢰가 없고 인접한 지뢰가 있는 닫힌 셀은") {
+        val sut =
+            ClosedCell(
+                location = oneByOneLocation,
+                hasLandmine = false,
+                numberOfAdjacentLandmines = NumberOfAdjacentMines(1),
+            )
+
+        `when`("오픈 셀 전략으로") {
+            val result = sut.findOpenStrategy()
+
+            then("단일 셀 오픈 전략을 가지고 있다") {
+                result.shouldBeInstanceOf<SingleOpenCellStrategy>()
+            }
+        }
+    }
+
+    given("지뢰가 없고 인접한 지뢰가 없는 닫힌 셀은") {
+        val sut =
+            ClosedCell(
+                location = oneByOneLocation,
+                hasLandmine = false,
+                numberOfAdjacentLandmines = NumberOfAdjacentMines.ZERO,
+            )
+
+        `when`("오픈 셀 전략으로") {
+            val result = sut.findOpenStrategy()
+
+            then("단일 셀 오픈 전략을 가지고 있다") {
+                result.shouldBeInstanceOf<CascadingOpenCellStrategy>()
             }
         }
     }
