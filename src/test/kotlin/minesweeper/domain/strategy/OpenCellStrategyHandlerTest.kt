@@ -17,7 +17,7 @@ class OpenCellStrategyHandlerTest : BehaviorSpec({
             val result = sut.findStrategy(targetCell)
 
             then("무변화 셀 오픈 전략을 반환한다") {
-                result.shouldBeInstanceOf<NoChangeOpenCellStrategy>()
+                result.shouldBeInstanceOf<NoOpenCellStrategy>()
             }
         }
     }

@@ -7,7 +7,7 @@ import minesweeper.domain.cell.NumberOfAdjacentMines
 class OpenCellStrategyHandler {
     fun findStrategy(targetCell: Cell): OpenCellStrategy =
         when {
-            targetCell !is ClosedCell -> NoChangeOpenCellStrategy()
+            targetCell !is ClosedCell -> NoOpenCellStrategy()
             targetCell.hasLandmine -> SingleOpenCellStrategy()
             targetCell.numberOfAdjacentLandmines > NumberOfAdjacentMines.ZERO -> SingleOpenCellStrategy()
             else -> CascadingOpenCellStrategy()
