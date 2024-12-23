@@ -4,9 +4,10 @@ import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
 import minesweeper.domain.oneByOneLocation
+import minesweeper.domain.strategy.NoOpenCellStrategy
 
 class LandmineCellTest : BehaviorSpec({
-    given("LandmineCell 는") {
+    given("지뢰 셀은") {
         val location = oneByOneLocation
         val sut = LandmineCell(location)
 
@@ -16,13 +17,16 @@ class LandmineCellTest : BehaviorSpec({
                 result shouldBe oneByOneLocation
             }
 
-            then("hasLandmine 이 true 이다") {
-                sut.shouldBeInstanceOf<HasLandmine>()
-                sut.hasLandmine shouldBe true
-            }
-
-            then("기본 심볼은 LANDMINE 이다") {
+            then("지뢰 셀의 심볼은 지뢰다") {
                 sut.symbol shouldBe Symbol.LANDMINE
+            }
+        }
+
+        `when`("셀 오픈 전략으로") {
+            val result = sut.findOpenStrategy()
+
+            then("오픈하지 않음 전략을 가지고 있다") {
+                result.shouldBeInstanceOf<NoOpenCellStrategy>()
             }
         }
     }

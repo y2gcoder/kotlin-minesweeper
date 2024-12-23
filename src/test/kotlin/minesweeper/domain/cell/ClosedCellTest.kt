@@ -4,19 +4,21 @@ import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
 import minesweeper.domain.oneByOneLocation
+import minesweeper.domain.strategy.CascadingOpenCellStrategy
+import minesweeper.domain.strategy.SingleOpenCellStrategy
 
 class ClosedCellTest : BehaviorSpec({
-    given("Location 을 받아") {
+    given("row = 1, column = 1인 위치를 받아") {
         val location = oneByOneLocation
 
-        `when`("생성하면") {
+        `when`("닫힌 셀을 생성하면") {
             val sut = ClosedCell(location)
 
-            then("해당 Location 을 가지고 있다") {
+            then("닫힌 셀의 위치는 row = 1, column = 1 이다") {
                 sut.location shouldBe location
             }
 
-            then("Symbol.CLOSED 를 가진다") {
+            then("닫힌 셀의 심볼은 닫힘이다") {
                 sut.symbol shouldBe Symbol.CLOSED
             }
 
@@ -30,39 +32,39 @@ class ClosedCellTest : BehaviorSpec({
         }
     }
 
-    given("Landmine 을 가지고 있는 ClosedCell 은") {
+    given("지뢰를 가지고 있는 ClosedCell 은") {
         val sut = ClosedCell(oneByOneLocation, hasLandmine = true)
 
-        `when`("open() 하면") {
+        `when`("열게 되면") {
             val result = sut.open()
 
-            then("LandmineCell 을 반환한다") {
+            then("지뢰 셀로 변한다") {
                 result.shouldBeInstanceOf<LandmineCell>()
             }
         }
     }
 
-    given("Landmine 을 가지고 있지 않은 ClosedCell 은") {
+    given("지뢰를 가지고 있지 않은 닫힌 셀은") {
         val sut = ClosedCell(oneByOneLocation)
 
-        `when`("open() 하면") {
+        `when`("열게 되면") {
             val result = sut.open()
 
-            then("NumberCell 을 반환한다") {
+            then("숫자 셀로 변한다") {
                 result.shouldBeInstanceOf<NumberCell>()
             }
         }
     }
 
-    given("새로운 인접 지뢰 개수를 가지고") {
+    given("새로운 인접 지뢰 개수 8로") {
         val location = oneByOneLocation
         val sut = ClosedCell(location)
         val newNumberOfAdjacentMines = NumberOfAdjacentMines(8)
 
-        `when`("withNumberOfAdjacentLandmines() 를 호출하면") {
+        `when`("닫힌 셀을 업데이트하여") {
             val result = sut.withNumberOfAdjacentLandmines(newNumberOfAdjacentMines)
 
-            then("해당 인접 지뢰 개수로 업데이트된 ClosedCell 을 반환한다") {
+            then("인접 지뢰 개수 8을 가진 닫힌 셀을 획득할 수 있다") {
                 sut.location shouldBe result.location
                 sut.symbol shouldBe result.symbol
                 sut.hasLandmine shouldBe result.hasLandmine
@@ -73,20 +75,67 @@ class ClosedCellTest : BehaviorSpec({
         }
     }
 
-    given("지뢰를 심기 위해") {
+    given("지뢰가 심어지지 않은 닫힌 셀에") {
         val location = oneByOneLocation
         val sut = ClosedCell(location)
 
-        `when`("plantMine()을 호출하면") {
+        `when`("지뢰를 심으면") {
             val result = sut.plantMine()
 
-            then("hasLandmine 이 true 로 업데이트 된 ClosedCell 을 반환한다") {
+            then("지뢰를 가진 닫힌 셀이 된다") {
                 sut.location shouldBe result.location
                 sut.symbol shouldBe result.symbol
                 sut.numberOfAdjacentLandmines shouldBe result.numberOfAdjacentLandmines
 
                 sut.hasLandmine shouldBe false
                 result.hasLandmine shouldBe true
+            }
+        }
+    }
+
+    given("지뢰가 있는 닫힌 셀은") {
+        val location = oneByOneLocation
+        val sut = ClosedCell(location = location, hasLandmine = true)
+
+        `when`("오픈 셀 전략으로") {
+            val result = sut.findOpenStrategy()
+
+            then("단일 셀 오픈 전략을 가지고 있다") {
+                result.shouldBeInstanceOf<SingleOpenCellStrategy>()
+            }
+        }
+    }
+
+    given("지뢰가 없고 인접한 지뢰가 있는 닫힌 셀은") {
+        val sut =
+            ClosedCell(
+                location = oneByOneLocation,
+                hasLandmine = false,
+                numberOfAdjacentLandmines = NumberOfAdjacentMines(1),
+            )
+
+        `when`("오픈 셀 전략으로") {
+            val result = sut.findOpenStrategy()
+
+            then("단일 셀 오픈 전략을 가지고 있다") {
+                result.shouldBeInstanceOf<SingleOpenCellStrategy>()
+            }
+        }
+    }
+
+    given("지뢰가 없고 인접한 지뢰가 없는 닫힌 셀은") {
+        val sut =
+            ClosedCell(
+                location = oneByOneLocation,
+                hasLandmine = false,
+                numberOfAdjacentLandmines = NumberOfAdjacentMines.ZERO,
+            )
+
+        `when`("오픈 셀 전략으로") {
+            val result = sut.findOpenStrategy()
+
+            then("단일 셀 오픈 전략을 가지고 있다") {
+                result.shouldBeInstanceOf<CascadingOpenCellStrategy>()
             }
         }
     }

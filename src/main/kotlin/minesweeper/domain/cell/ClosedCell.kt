@@ -1,12 +1,23 @@
 package minesweeper.domain.cell
 
+import minesweeper.domain.strategy.CascadingOpenCellStrategy
+import minesweeper.domain.strategy.OpenCellStrategy
+import minesweeper.domain.strategy.SingleOpenCellStrategy
+
 data class ClosedCell(
     override val location: Location,
-    override val hasLandmine: Boolean = false,
+    val hasLandmine: Boolean = false,
     override val numberOfAdjacentLandmines: NumberOfAdjacentMines = NumberOfAdjacentMines.ZERO,
-) : Cell, HasLandmine, HasAdjacentLandmines {
+) : Cell, HasAdjacentLandmines {
     override val symbol: Symbol
         get() = Symbol.CLOSED
+
+    override fun findOpenStrategy(): OpenCellStrategy =
+        when {
+            hasLandmine -> SingleOpenCellStrategy()
+            numberOfAdjacentLandmines > NumberOfAdjacentMines.ZERO -> SingleOpenCellStrategy()
+            else -> CascadingOpenCellStrategy()
+        }
 
     fun open(): Cell {
         if (hasLandmine) {
@@ -16,8 +27,8 @@ data class ClosedCell(
     }
 
     fun withNumberOfAdjacentLandmines(newNumberOfAdjacentMines: NumberOfAdjacentMines): ClosedCell {
-        return ClosedCell(location, hasLandmine, newNumberOfAdjacentMines)
+        return this.copy(numberOfAdjacentLandmines = newNumberOfAdjacentMines)
     }
 
-    fun plantMine(): ClosedCell = ClosedCell(location = location, numberOfAdjacentLandmines = numberOfAdjacentLandmines, hasLandmine = true)
+    fun plantMine(): ClosedCell = this.copy(hasLandmine = true)
 }

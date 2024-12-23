@@ -2,6 +2,7 @@ package minesweeper.domain
 
 import minesweeper.domain.cell.Cell
 import minesweeper.domain.cell.ClosedCell
+import minesweeper.domain.cell.LandmineCell
 import minesweeper.domain.cell.Location
 
 class GameBoard private constructor(
@@ -19,6 +20,18 @@ class GameBoard private constructor(
     fun openAll(): GameBoard {
         val allOpenedCells = cells.map { if (it is ClosedCell) it.open() else it }
         return GameBoard(area, Cells(allOpenedCells))
+    }
+
+    fun gameState(): GameState {
+        val countOfClosedCells = cells.count { it is ClosedCell }
+        val countOfLandmineCells = cells.count { it is LandmineCell }
+        val countOfTotalLandmines = cells.count { (it is ClosedCell && it.hasLandmine) } + countOfLandmineCells
+
+        return when {
+            countOfLandmineCells > 0 -> GameState.LOSE
+            countOfClosedCells == countOfTotalLandmines -> GameState.WIN
+            else -> GameState.CONTINUE
+        }
     }
 
     companion object {
