@@ -31,11 +31,11 @@ class NumberCellTest : BehaviorSpec({
         `when`("0 ~ 8 까지만") {
             then("가능하다") {
                 listOf(-1, 9).forEach { adjacentLandmines ->
-                    shouldThrow<IllegalArgumentException> { NumberCell(adjacentLandmines) }
+                    shouldThrow<IllegalArgumentException> { NumberCell(AdjacentMines(adjacentLandmines)) }
                 }
                 (0..8).forEach { adjacentLandmines ->
-                    val sut = NumberCell(adjacentLandmines)
-                    sut.adjacentMines shouldBe adjacentLandmines
+                    val sut = NumberCell(AdjacentMines(adjacentLandmines))
+                    sut.adjacentMines shouldBe AdjacentMines(adjacentLandmines)
                 }
             }
         }

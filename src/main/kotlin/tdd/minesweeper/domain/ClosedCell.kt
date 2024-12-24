@@ -1,9 +1,11 @@
 package tdd.minesweeper.domain
 
-class ClosedCell(
+data class ClosedCell(
     val hasLandmine: Boolean = false,
-    override val adjacentMines: Int = 0,
+    override val adjacentMines: AdjacentMines = AdjacentMines(0),
 ) : Cell {
+    constructor(adjacentMines: Int) : this(adjacentMines = AdjacentMines(adjacentMines))
+
     override fun isOpen(): Boolean = false
 
     override fun open(): Cell {

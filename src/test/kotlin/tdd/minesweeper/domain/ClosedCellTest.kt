@@ -40,7 +40,7 @@ class ClosedCellTest : BehaviorSpec({
                     val sut =
                         ClosedCell(
                             hasLandmine = false,
-                            adjacentMines = adjacentMines,
+                            adjacentMines = AdjacentMines(adjacentMines),
                         )
 
                     val result = sut.open()

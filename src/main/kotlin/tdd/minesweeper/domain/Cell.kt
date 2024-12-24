@@ -1,7 +1,7 @@
 package tdd.minesweeper.domain
 
 interface Cell {
-    val adjacentMines: Int?
+    val adjacentMines: AdjacentMines?
 
     fun isOpen(): Boolean
 
