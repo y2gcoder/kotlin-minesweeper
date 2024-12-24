@@ -28,4 +28,19 @@ class ClosedCellTest : BehaviorSpec({
             }
         }
     }
+
+    given("지뢰가 있는 닫힌 셀을") {
+        val sut =
+            ClosedCell(
+                hasLandmine = true,
+            )
+
+        `when`("열면") {
+            val result = sut.open()
+
+            then("지뢰 셀이 된다") {
+                result.shouldBeInstanceOf<LandmineCell>()
+            }
+        }
+    }
 })
