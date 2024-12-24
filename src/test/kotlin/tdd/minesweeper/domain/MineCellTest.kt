@@ -4,9 +4,9 @@ import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.booleans.shouldBeTrue
 import io.kotest.matchers.types.shouldBeInstanceOf
 
-class LandmineCellTest : BehaviorSpec({
+class MineCellTest : BehaviorSpec({
     given("지뢰 셀은") {
-        val sut = LandmineCell()
+        val sut = MineCell()
 
         `when`("열린 상태가") {
             val result = sut.isOpen()
@@ -20,7 +20,7 @@ class LandmineCellTest : BehaviorSpec({
             val result = sut.open()
 
             then("지뢰 셀이다") {
-                result.shouldBeInstanceOf<LandmineCell>()
+                result.shouldBeInstanceOf<MineCell>()
             }
         }
     }

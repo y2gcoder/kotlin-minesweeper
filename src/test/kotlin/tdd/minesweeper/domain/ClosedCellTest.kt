@@ -39,7 +39,7 @@ class ClosedCellTest : BehaviorSpec({
             val result = sut.open()
 
             then("지뢰 셀이 된다") {
-                result.shouldBeInstanceOf<LandmineCell>()
+                result.shouldBeInstanceOf<MineCell>()
             }
         }
     }

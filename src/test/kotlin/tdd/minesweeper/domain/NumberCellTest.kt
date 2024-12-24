@@ -35,7 +35,7 @@ class NumberCellTest : BehaviorSpec({
                 }
                 (0..8).forEach { adjacentLandmines ->
                     val sut = NumberCell(adjacentLandmines)
-                    sut.adjacentLandmines shouldBe adjacentLandmines
+                    sut.adjacentMines shouldBe adjacentLandmines
                 }
             }
         }

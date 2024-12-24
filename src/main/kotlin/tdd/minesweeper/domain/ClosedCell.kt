@@ -5,7 +5,7 @@ class ClosedCell(val hasLandmine: Boolean = false) : Cell {
 
     override fun open(): Cell {
         if (hasLandmine) {
-            return LandmineCell()
+            return MineCell()
         }
         return NumberCell()
     }
