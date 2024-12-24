@@ -2,6 +2,7 @@ package tdd.minesweeper.domain
 
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.booleans.shouldBeTrue
+import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
 
 class MineCellTest : BehaviorSpec({
@@ -21,6 +22,12 @@ class MineCellTest : BehaviorSpec({
 
             then("지뢰 셀이다") {
                 result.shouldBeInstanceOf<MineCell>()
+            }
+        }
+
+        `when`("지뢰가") {
+            then("있는 상태다") {
+                sut.hasMine() shouldBe true
             }
         }
     }

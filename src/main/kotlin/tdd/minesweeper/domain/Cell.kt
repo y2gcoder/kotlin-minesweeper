@@ -5,5 +5,7 @@ interface Cell {
 
     fun isOpen(): Boolean
 
+    fun hasMine(): Boolean
+
     fun open(): Cell
 }

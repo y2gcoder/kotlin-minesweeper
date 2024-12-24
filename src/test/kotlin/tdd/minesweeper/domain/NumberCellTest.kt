@@ -25,6 +25,12 @@ class NumberCellTest : BehaviorSpec({
                 result.shouldBeInstanceOf<NumberCell>()
             }
         }
+
+        `when`("지뢰가") {
+            then("없는 상태다") {
+                sut.hasMine() shouldBe false
+            }
+        }
     }
 
     given("인접 지뢰 수는") {

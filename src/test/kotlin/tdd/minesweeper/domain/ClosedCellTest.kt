@@ -16,12 +16,18 @@ class ClosedCellTest : BehaviorSpec({
                 result.shouldBeFalse()
             }
         }
+
+        `when`("기본적으로") {
+            then("지뢰가 없는 상태다") {
+                sut.hasMine() shouldBe false
+            }
+        }
     }
 
     given("지뢰가 있는 닫힌 셀을") {
         val sut =
             ClosedCell(
-                hasLandmine = true,
+                hasMine = true,
             )
 
         `when`("열면") {
@@ -39,7 +45,7 @@ class ClosedCellTest : BehaviorSpec({
                 (0..8).forEach { adjacentMines ->
                     val sut =
                         ClosedCell(
-                            hasLandmine = false,
+                            hasMine = false,
                             adjacentMines = AdjacentMines(adjacentMines),
                         )
 
