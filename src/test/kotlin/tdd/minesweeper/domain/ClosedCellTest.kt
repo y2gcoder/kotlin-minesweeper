@@ -2,6 +2,7 @@ package tdd.minesweeper.domain
 
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.booleans.shouldBeFalse
+import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
 
 class ClosedCellTest : BehaviorSpec({
@@ -17,18 +18,6 @@ class ClosedCellTest : BehaviorSpec({
         }
     }
 
-    given("지뢰가 없는 닫힌 셀을") {
-        val sut = ClosedCell()
-
-        `when`("열면") {
-            val result = sut.open()
-
-            then("숫자 셀이 된다") {
-                result.shouldBeInstanceOf<NumberCell>()
-            }
-        }
-    }
-
     given("지뢰가 있는 닫힌 셀을") {
         val sut =
             ClosedCell(
@@ -40,6 +29,24 @@ class ClosedCellTest : BehaviorSpec({
 
             then("지뢰 셀이 된다") {
                 result.shouldBeInstanceOf<MineCell>()
+            }
+        }
+    }
+
+    given("지뢰가 없을 때") {
+        `when`("열면") {
+            then("똑같은 인접한 지뢰 수를 가진 숫자 셀이 된다") {
+                (0..8).forEach { adjacentMines ->
+                    val sut =
+                        ClosedCell(
+                            hasLandmine = false,
+                            adjacentMines = adjacentMines,
+                        )
+
+                    val result = sut.open()
+
+                    result.adjacentMines shouldBe sut.adjacentMines
+                }
             }
         }
     }
