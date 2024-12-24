@@ -2,6 +2,7 @@ package tdd.minesweeper.domain
 
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.booleans.shouldBeFalse
+import io.kotest.matchers.types.shouldBeInstanceOf
 
 class ClosedCellTest : BehaviorSpec({
     given("닫힌 셀은") {
@@ -12,6 +13,18 @@ class ClosedCellTest : BehaviorSpec({
 
             then("아니다") {
                 result.shouldBeFalse()
+            }
+        }
+    }
+
+    given("지뢰가 없는 닫힌 셀을") {
+        val sut = ClosedCell()
+
+        `when`("열면") {
+            val result = sut.open()
+
+            then("숫자 셀이 된다") {
+                result.shouldBeInstanceOf<NumberCell>()
             }
         }
     }
