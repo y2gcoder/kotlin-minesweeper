@@ -24,6 +24,10 @@ class BoardBuilderTest : BehaviorSpec({
                 result.cells.size shouldBe 25
                 result.cells.all { it is ClosedCell } shouldBe true
             }
+
+            then("25개의 셀 중 5개는 지뢰를 가지고 있다") {
+                result.cells.filter { it.hasMine() }.size shouldBe 5
+            }
         }
     }
 
@@ -35,7 +39,7 @@ class BoardBuilderTest : BehaviorSpec({
         `when`("입력하지 않으면") {
             then("보드를 생성할 수 없다") {
                 shouldThrow<IllegalArgumentException> {
-                    sut.width(width).countOfMines(countOfMines)
+                    sut.width(width).countOfMines(countOfMines).build()
                 }
             }
         }
@@ -56,7 +60,7 @@ class BoardBuilderTest : BehaviorSpec({
         `when`("입력하지 않으면") {
             then("보드를 생성할 수 없다") {
                 shouldThrow<IllegalArgumentException> {
-                    sut.height(height).countOfMines(countOfMines)
+                    sut.height(height).countOfMines(countOfMines).build()
                 }
             }
         }
@@ -64,6 +68,21 @@ class BoardBuilderTest : BehaviorSpec({
             then("보드를 생성할 수 없다") {
                 shouldThrow<IllegalArgumentException> {
                     sut.width(0).height(height).countOfMines(countOfMines)
+                }
+            }
+        }
+    }
+
+    given("보드의 전체 셀 수가 5x5 = 25개일 때") {
+        val height = 5
+        val width = 5
+        val countOfMines = 26
+        val sut = BoardBuilder()
+
+        `when`("지뢰를 보드의 전체 셀 수보다 더 많이") {
+            then("만들 수 없다") {
+                shouldThrow<IllegalArgumentException> {
+                    sut.height(height).width(width).countOfMines(countOfMines).build()
                 }
             }
         }
