@@ -22,6 +22,15 @@ class ClosedCellTest : BehaviorSpec({
                 sut.hasMine() shouldBe false
             }
         }
+
+        `when`("인접 지뢰 수를") {
+            val newAdjacentMines = AdjacentMines(8)
+            val result: ClosedCell = sut.withAdjacentMines(newAdjacentMines)
+
+            then("업데이트 할 수 있다") {
+                result.adjacentMines shouldBe newAdjacentMines
+            }
+        }
     }
 
     given("지뢰가 있는 닫힌 셀을") {

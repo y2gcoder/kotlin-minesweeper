@@ -1,7 +1,7 @@
 package tdd.minesweeper.domain
 
 data class ClosedCell(
-    val hasMine: Boolean = false,
+    private val hasMine: Boolean = false,
     override val adjacentMines: AdjacentMines = AdjacentMines(0),
 ) : Cell {
     constructor(adjacentMines: Int) : this(adjacentMines = AdjacentMines(adjacentMines))
@@ -16,4 +16,6 @@ data class ClosedCell(
         }
         return NumberCell(adjacentMines)
     }
+
+    fun withAdjacentMines(newAdjacentMines: AdjacentMines): ClosedCell = this.copy(adjacentMines = newAdjacentMines)
 }
