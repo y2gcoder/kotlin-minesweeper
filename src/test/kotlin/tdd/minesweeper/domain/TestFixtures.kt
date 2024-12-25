@@ -1,6 +1,6 @@
 package tdd.minesweeper.domain
 
-val closedCellsBy3x3: Cells =
+val closedCellsBy9: Cells =
     Cells(
         listOf(
             ClosedCell(),

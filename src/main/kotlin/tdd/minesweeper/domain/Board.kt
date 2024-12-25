@@ -1,3 +1,3 @@
 package tdd.minesweeper.domain
 
-class Board(val cells: Cells)
+data class Board(val area: Area, val cells: Cells)
