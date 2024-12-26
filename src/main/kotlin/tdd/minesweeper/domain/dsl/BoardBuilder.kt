@@ -3,12 +3,12 @@ package tdd.minesweeper.domain.dsl
 import tdd.minesweeper.domain.Area
 import tdd.minesweeper.domain.Board
 import tdd.minesweeper.domain.BoardCellsCreator
-import tdd.minesweeper.domain.Builder
 import tdd.minesweeper.domain.DefaultBoardCellsCreator
 import tdd.minesweeper.domain.Location
 
 @BoardDslMaker
-class BoardBuilder(private val boardCellsCreator: BoardCellsCreator = DefaultBoardCellsCreator()) : Builder<Board> {
+class BoardBuilder(private val boardCellsCreator: BoardCellsCreator = DefaultBoardCellsCreator()) :
+    Builder<Board> {
     private var height: Int = 0
     private var width: Int = 0
     private var countOfMines: Int = 0
