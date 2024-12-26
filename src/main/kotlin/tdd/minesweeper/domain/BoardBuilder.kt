@@ -68,11 +68,30 @@ class BoardBuilder : Builder<Board> {
 
         val mineLocations = validManualMineLocations + randomMineLocations
 
-        return Cells(
+        val closedCells =
             allLocations
                 .map { location ->
                     if (location in mineLocations) ClosedCell(hasMine = true) else ClosedCell()
-                },
-        )
+                }
+
+        val updatedCells =
+            closedCells
+                .mapIndexed { index, cell ->
+                    if (cell.hasMine()) {
+                        cell
+                    } else {
+                        val location = allLocations[index]
+                        val directions = listOf(-1 to -1, -1 to 0, -1 to 1, 0 to -1, 0 to 1, 1 to -1, 1 to 0, 1 to 1)
+                        val adjacentMineCount =
+                            directions
+                                .count { (dx, dy) ->
+                                    val adjacentLocation = Location(location.row + dx, location.col + dy)
+                                    adjacentLocation in mineLocations
+                                }
+                        cell.copy(adjacentMines = AdjacentMines(adjacentMineCount))
+                    }
+                }
+
+        return Cells(updatedCells)
     }
 }

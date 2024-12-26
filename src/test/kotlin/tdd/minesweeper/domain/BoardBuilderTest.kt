@@ -107,20 +107,48 @@ class BoardBuilderTest : BehaviorSpec({
                     .mineAt(5, 1)
                     .build()
 
+            val mineLocations =
+                listOf(
+                    Location(1, 4),
+                    Location(1, 5),
+                    Location(2, 1),
+                    Location(4, 3),
+                    Location(5, 1),
+                )
+
             then("해당 위치에 지뢰를 가진 보드판을 만들 수 있다") {
                 result.cells.filter { it.hasMine() }.size shouldBe 5
-                val mineLocations =
-                    listOf(
-                        Location(1, 4),
-                        Location(1, 5),
-                        Location(2, 1),
-                        Location(4, 3),
-                        Location(5, 1),
-                    )
 
                 mineLocations.forEach { location ->
                     val cell = result.cells[(location.row - 1) * width + (location.col - 1)]
                     cell.hasMine() shouldBe true
+                }
+            }
+
+            then("지뢰가 아닌 셀들에 인접 지뢰 개수를 표시할 수 있다") {
+                // -1 은 지뢰
+                val expectedAdjacentMines =
+                    listOf(
+                        listOf(1, 1, 1, -1, -1),
+                        listOf(-1, 1, 1, 2, 2),
+                        listOf(1, 2, 1, 1, 0),
+                        listOf(1, 2, -1, 1, 0),
+                        listOf(-1, 2, 1, 1, 0),
+                    )
+
+                for (row in 1..height) {
+                    for (col in 1..width) {
+                        val cellIndex = (row - 1) * width + (col - 1)
+                        val cell = result.cells[cellIndex]
+                        val expectedMineCount = expectedAdjacentMines[row - 1][col - 1]
+
+                        if (expectedMineCount == -1) {
+                            cell.hasMine() shouldBe true
+                        } else {
+                            cell.hasMine() shouldBe false
+                            cell.adjacentMines shouldBe AdjacentMines(expectedMineCount)
+                        }
+                    }
                 }
             }
         }
