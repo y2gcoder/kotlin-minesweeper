@@ -1,4 +1,11 @@
-package tdd.minesweeper.domain
+package tdd.minesweeper.domain.strategy
+
+import tdd.minesweeper.domain.AdjacentDirection
+import tdd.minesweeper.domain.AdjacentMines
+import tdd.minesweeper.domain.Area
+import tdd.minesweeper.domain.Cells
+import tdd.minesweeper.domain.ClosedCell
+import tdd.minesweeper.domain.Location
 
 class DefaultBoardCellsCreator : BoardCellsCreator {
     override fun createCells(

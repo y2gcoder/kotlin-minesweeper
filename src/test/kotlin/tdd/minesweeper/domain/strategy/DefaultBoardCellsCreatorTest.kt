@@ -1,8 +1,12 @@
-package tdd.minesweeper.domain
+package tdd.minesweeper.domain.strategy
 
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.booleans.shouldBeTrue
 import io.kotest.matchers.shouldBe
+import tdd.minesweeper.domain.AdjacentMines
+import tdd.minesweeper.domain.Area
+import tdd.minesweeper.domain.ClosedCell
+import tdd.minesweeper.domain.Location
 
 class DefaultBoardCellsCreatorTest : BehaviorSpec({
 

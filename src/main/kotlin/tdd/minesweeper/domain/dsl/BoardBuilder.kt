@@ -2,9 +2,9 @@ package tdd.minesweeper.domain.dsl
 
 import tdd.minesweeper.domain.Area
 import tdd.minesweeper.domain.Board
-import tdd.minesweeper.domain.BoardCellsCreator
-import tdd.minesweeper.domain.DefaultBoardCellsCreator
 import tdd.minesweeper.domain.Location
+import tdd.minesweeper.domain.strategy.BoardCellsCreator
+import tdd.minesweeper.domain.strategy.DefaultBoardCellsCreator
 
 @BoardDslMaker
 class BoardBuilder(private val boardCellsCreator: BoardCellsCreator = DefaultBoardCellsCreator()) :
