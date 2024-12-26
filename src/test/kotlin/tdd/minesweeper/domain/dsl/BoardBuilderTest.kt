@@ -257,7 +257,7 @@ class BoardBuilderTest : BehaviorSpec({
                     .mineAt(5, 1)
                     .build()
 
-            then("처음에 받은 지뢰 위치 5개에 지뢰를 가진 보드판을 만들 수 있다") {
+            then("유효한 지뢰 위치 5개에 지뢰를 가진 보드판을 만들 수 있다") {
                 result.cells.filter { it.hasMine() }.size shouldBe 5
                 val mineLocations =
                     listOf(
