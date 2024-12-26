@@ -6,57 +6,69 @@ class DefaultBoardCellsCreator : BoardCellsCreator {
         countOfMines: Int,
         inputManualMineLocations: Set<Location>,
     ): Cells {
-        val allLocations =
-            (0 until area.height * area.width)
-                .map {
-                    Location(
-                        row = (it / area.width) + 1,
-                        col = (it % area.width) + 1,
-                    )
-                }
+        // 모든 위치 구하기
+        val allLocations = createAllLocations(area)
 
-        var validManualMineLocations = allLocations.intersect(inputManualMineLocations)
+        // 지뢰 위치 구하기
+        val mineLocations = calculateMineLocations(allLocations, inputManualMineLocations, countOfMines)
 
-        var manualMineCount = validManualMineLocations.size
+        // 지뢰 심기
+        val closedCells = createMinePlantedCells(allLocations, mineLocations)
 
-        if (manualMineCount > countOfMines) {
-            validManualMineLocations = validManualMineLocations.take(countOfMines).toMutableSet()
-        }
+        // 지뢰 인접 위치 표시
+        val updatedCells = markOfAdjacentMines(closedCells, allLocations, mineLocations)
 
-        manualMineCount = validManualMineLocations.size
+        return Cells(updatedCells)
+    }
+
+    private fun createAllLocations(area: Area): List<Location> {
+        return (0 until area.height * area.width)
+            .map {
+                Location(
+                    row = (it / area.width) + 1,
+                    col = (it % area.width) + 1,
+                )
+            }
+    }
+
+    private fun calculateMineLocations(
+        allLocations: List<Location>,
+        inputManualMineLocations: Set<Location>,
+        countOfMines: Int,
+    ): Set<Location> {
+        val validManualMineLocations =
+            allLocations.intersect(inputManualMineLocations).take(countOfMines).toSet()
 
         val randomMineLocations: Set<Location> =
             (allLocations - validManualMineLocations)
                 .shuffled()
-                .take(countOfMines - manualMineCount)
+                .take(countOfMines - validManualMineLocations.size)
                 .toSet()
 
-        val mineLocations = validManualMineLocations + randomMineLocations
+        return validManualMineLocations + randomMineLocations
+    }
 
-        val closedCells =
-            allLocations
-                .map { location ->
-                    if (location in mineLocations) ClosedCell(hasMine = true) else ClosedCell()
-                }
+    private fun createMinePlantedCells(
+        allLocations: List<Location>,
+        mineLocations: Set<Location>,
+    ): List<ClosedCell> {
+        return allLocations.map { location -> if (location in mineLocations) ClosedCell(hasMine = true) else ClosedCell() }
+    }
 
-        val updatedCells =
-            closedCells
-                .mapIndexed { index, cell ->
-                    if (cell.hasMine()) {
-                        cell
-                    } else {
-                        val location = allLocations[index]
-                        val directions = listOf(-1 to -1, -1 to 0, -1 to 1, 0 to -1, 0 to 1, 1 to -1, 1 to 0, 1 to 1)
-                        val adjacentMineCount =
-                            directions
-                                .count { (dx, dy) ->
-                                    val adjacentLocation = Location(location.row + dx, location.col + dy)
-                                    adjacentLocation in mineLocations
-                                }
-                        cell.copy(adjacentMines = AdjacentMines(adjacentMineCount))
-                    }
-                }
+    private fun markOfAdjacentMines(
+        closedCells: List<ClosedCell>,
+        allLocations: List<Location>,
+        mineLocations: Set<Location>,
+    ) = closedCells
+        .mapIndexed { index, cell ->
+            cell.withAdjacentMines(AdjacentMines(calculateAdjacentMineCount(allLocations[index], mineLocations)))
+        }
 
-        return Cells(updatedCells)
+    private fun calculateAdjacentMineCount(
+        location: Location,
+        mineLocations: Set<Location>,
+    ): Int {
+        val adjacentLocations = AdjacentDirection.allAdjacentLocations(location)
+        return adjacentLocations.count { it in mineLocations }
     }
 }
