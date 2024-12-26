@@ -1,5 +1,14 @@
-package tdd.minesweeper.domain
+package tdd.minesweeper.domain.dsl
 
+import tdd.minesweeper.domain.AdjacentMines
+import tdd.minesweeper.domain.Area
+import tdd.minesweeper.domain.Board
+import tdd.minesweeper.domain.Builder
+import tdd.minesweeper.domain.Cells
+import tdd.minesweeper.domain.ClosedCell
+import tdd.minesweeper.domain.Location
+
+@BoardDslMaker
 class BoardBuilder : Builder<Board> {
     private var height: Int = 0
     private var width: Int = 0

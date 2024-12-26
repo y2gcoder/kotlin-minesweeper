@@ -1,8 +1,12 @@
-package tdd.minesweeper.domain
+package tdd.minesweeper.domain.dsl
 
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.shouldBe
+import tdd.minesweeper.domain.AdjacentMines
+import tdd.minesweeper.domain.Area
+import tdd.minesweeper.domain.ClosedCell
+import tdd.minesweeper.domain.Location
 
 class BoardBuilderTest : BehaviorSpec({
     given("높이 5, 너비 5, 지뢰 개수 5를 받아") {
