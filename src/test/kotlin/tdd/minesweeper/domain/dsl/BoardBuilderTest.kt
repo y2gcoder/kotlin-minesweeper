@@ -274,5 +274,37 @@ class BoardBuilderTest : BehaviorSpec({
                 }
             }
         }
+
+        `when`("5개의 서로 다른 오픈위치를 수동으로 받아 보드를 만들면") {
+            val result =
+                sut
+                    .height(height)
+                    .width(width)
+                    .countOfMines(countOfMines)
+                    .openAt(1, 4)
+                    .openAt(1, 5)
+                    .openAt(2, 1)
+                    .openAt(4, 3)
+                    .openAt(5, 1)
+                    .build()
+
+            val openLocations =
+                listOf(
+                    Location(1, 4),
+                    Location(1, 5),
+                    Location(2, 1),
+                    Location(4, 3),
+                    Location(5, 1),
+                )
+
+            then("해당 위치가 오픈된 셀을 가진 보드판을 만들 수 있다") {
+                result.cells.filter { it.isOpen() }.size shouldBe 5
+
+                openLocations.forEach { location ->
+                    val cell = result.cells[(location.row - 1) * width + (location.col - 1)]
+                    cell.isOpen() shouldBe true
+                }
+            }
+        }
     }
 })

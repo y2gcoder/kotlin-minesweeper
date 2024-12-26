@@ -2,6 +2,7 @@ package tdd.minesweeper.domain.dsl
 
 import tdd.minesweeper.domain.Area
 import tdd.minesweeper.domain.Board
+import tdd.minesweeper.domain.Cells
 import tdd.minesweeper.domain.Location
 import tdd.minesweeper.domain.strategy.BoardCellsCreator
 import tdd.minesweeper.domain.strategy.DefaultBoardCellsCreator
@@ -13,6 +14,7 @@ class BoardBuilder(private val boardCellsCreator: BoardCellsCreator = DefaultBoa
     private var width: Int = 0
     private var countOfMines: Int = 0
     private val manualMineLocations: MutableSet<Location> = mutableSetOf()
+    private val manualOpenLocations: MutableSet<Location> = mutableSetOf()
 
     fun height(value: Int) =
         apply {
@@ -33,6 +35,11 @@ class BoardBuilder(private val boardCellsCreator: BoardCellsCreator = DefaultBoa
         col: Int,
     ) = apply { this.manualMineLocations.add(Location(row, col)) }
 
+    fun openAt(
+        row: Int,
+        col: Int,
+    ) = apply { this.manualOpenLocations.add(Location(row, col)) }
+
     override fun build(): Board {
         require(height > 0) { "높이는 양수여야 합니다! height=$height" }
         require(width > 0) { "높이는 양수여야 합니다! width=$width" }
@@ -47,9 +54,38 @@ class BoardBuilder(private val boardCellsCreator: BoardCellsCreator = DefaultBoa
                 inputManualMineLocations = manualMineLocations.toSet(),
             )
 
+        if (manualOpenLocations.isEmpty()) {
+            return Board(
+                area = area,
+                cells = cells,
+            )
+        }
+
+        val openedCells: Cells = openCellsManually(cells, area)
+
         return Board(
             area = area,
-            cells = cells,
+            cells = openedCells,
+        )
+    }
+
+    private fun openCellsManually(
+        cells: Cells,
+        area: Area,
+    ): Cells {
+        return Cells(
+            cells.mapIndexed { index, cell ->
+                val location =
+                    Location(
+                        row = (index / area.width) + 1,
+                        col = (index % area.width) + 1,
+                    )
+                if (location in manualOpenLocations) {
+                    cell.open()
+                } else {
+                    cell
+                }
+            },
         )
     }
 }
