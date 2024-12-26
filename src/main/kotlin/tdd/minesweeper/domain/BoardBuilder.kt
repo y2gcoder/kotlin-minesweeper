@@ -4,6 +4,7 @@ class BoardBuilder : Builder<Board> {
     private var height: Int = 0
     private var width: Int = 0
     private var countOfMines: Int = 0
+    private val manualMineLocations: MutableSet<Location> = mutableSetOf()
 
     fun height(value: Int) =
         apply {
@@ -17,10 +18,12 @@ class BoardBuilder : Builder<Board> {
             this.width = value
         }
 
-    fun countOfMines(value: Int) =
-        apply {
-            this.countOfMines = value
-        }
+    fun countOfMines(value: Int) = apply { this.countOfMines = value }
+
+    fun mineAt(
+        row: Int,
+        col: Int,
+    ) = apply { this.manualMineLocations.add(Location(row, col)) }
 
     override fun build(): Board {
         require(height > 0) { "높이는 양수여야 합니다! height=$height" }
@@ -47,11 +50,23 @@ class BoardBuilder : Builder<Board> {
                     )
                 }
 
-        val mineLocations: Set<Location> =
-            allLocations
+        var validManualMineLocations = allLocations.intersect(manualMineLocations)
+
+        var manualMineCount = validManualMineLocations.size
+
+        if (manualMineCount > countOfMines) {
+            validManualMineLocations = validManualMineLocations.take(countOfMines).toMutableSet()
+        }
+
+        manualMineCount = validManualMineLocations.size
+
+        val randomMineLocations: Set<Location> =
+            (allLocations - validManualMineLocations)
                 .shuffled()
-                .take(countOfMines)
+                .take(countOfMines - manualMineCount)
                 .toSet()
+
+        val mineLocations = validManualMineLocations + randomMineLocations
 
         return Cells(
             allLocations
