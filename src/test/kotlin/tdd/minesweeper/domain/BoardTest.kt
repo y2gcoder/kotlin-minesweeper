@@ -62,6 +62,28 @@ class BoardTest : BehaviorSpec({
                 result.cells shouldContainExactly expectedBoard.cells
             }
         }
+
+        `when`("이웃한 8방향 중에 지뢰가 있는 셀을 열면") {
+            val location = Location(1, 1)
+            val result = sut.open(location)
+
+            then("해당 셀만 열린다") {
+                val expectedBoard =
+                    board {
+                        height(5)
+                        width(5)
+                        countOfMines(5)
+                        mineAt(1, 4)
+                        mineAt(1, 5)
+                        mineAt(2, 1)
+                        mineAt(4, 3)
+                        mineAt(5, 1)
+                        openAt(1, 1)
+                    }
+
+                result.cells shouldContainExactly expectedBoard.cells
+            }
+        }
     }
 
     given("5 x 5 크기, 지뢰 개수 5개, 열린 셀 1개의 보드에서") {
