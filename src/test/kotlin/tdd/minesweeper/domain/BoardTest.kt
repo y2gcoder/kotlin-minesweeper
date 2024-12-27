@@ -2,6 +2,7 @@ package tdd.minesweeper.domain
 
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.BehaviorSpec
+import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
 import tdd.minesweeper.domain.dsl.board
 
@@ -38,6 +39,27 @@ class BoardTest : BehaviorSpec({
 
             then("예외를 던진다") {
                 shouldThrow<IllegalArgumentException> { sut.open(location) }
+            }
+        }
+
+        `when`("지뢰를 가진 닫힌 셀을 열면") {
+            val location = Location(1, 4)
+            val result = sut.open(location)
+
+            then("해당 셀만 열린다") {
+                val expectedBoard =
+                    board {
+                        height(5)
+                        width(5)
+                        countOfMines(5)
+                        mineAt(1, 4)
+                        mineAt(1, 5)
+                        mineAt(2, 1)
+                        mineAt(4, 3)
+                        mineAt(5, 1)
+                        openAt(1, 4)
+                    }
+                result.cells shouldContainExactly expectedBoard.cells
             }
         }
     }

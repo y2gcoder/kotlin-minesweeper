@@ -7,7 +7,7 @@ import io.kotest.matchers.types.shouldBeInstanceOf
 
 class MineCellTest : BehaviorSpec({
     given("지뢰 셀은") {
-        val sut = MineCell()
+        val sut = MineCell
 
         `when`("열린 상태가") {
             val result = sut.isOpen()

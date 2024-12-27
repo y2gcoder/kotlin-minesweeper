@@ -12,7 +12,7 @@ data class ClosedCell(
 
     override fun open(): Cell {
         if (hasMine) {
-            return MineCell()
+            return MineCell
         }
         return NumberCell(adjacentMines)
     }

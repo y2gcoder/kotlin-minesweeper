@@ -4,7 +4,12 @@ data class Board(val area: Area, val cells: Cells) {
     fun open(location: Location): Board {
         validateLocation(location)
 
-        return this.copy()
+        val locationIndex = (location.row - 1) * area.width + (location.col - 1)
+
+        val mutableCells = cells.toMutableList()
+        mutableCells[locationIndex] = mutableCells[locationIndex].open()
+
+        return this.copy(cells = Cells(mutableCells.toList()))
     }
 
     private fun validateLocation(location: Location) {

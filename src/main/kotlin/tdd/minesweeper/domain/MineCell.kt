@@ -1,6 +1,6 @@
 package tdd.minesweeper.domain
 
-class MineCell : Cell {
+object MineCell : Cell {
     override val adjacentMines: AdjacentMines? = null
 
     override fun isOpen(): Boolean = true
