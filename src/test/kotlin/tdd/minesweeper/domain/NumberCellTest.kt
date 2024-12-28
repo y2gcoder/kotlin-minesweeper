@@ -31,6 +31,14 @@ class NumberCellTest : BehaviorSpec({
                 sut.hasMine() shouldBe false
             }
         }
+
+        `when`("이미 열린 셀이므로") {
+            val result = sut.isExpandableToAdjacent()
+
+            then("확장해서 열 수 없는 상태이다") {
+                result shouldBe false
+            }
+        }
     }
 
     given("인접 지뢰 수는") {

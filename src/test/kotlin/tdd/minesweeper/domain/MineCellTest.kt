@@ -30,5 +30,13 @@ class MineCellTest : BehaviorSpec({
                 sut.hasMine() shouldBe true
             }
         }
+
+        `when`("이미 열린 셀이므로") {
+            val result = sut.isExpandableToAdjacent()
+
+            then("확장해서 열 수 없는 상태다") {
+                result shouldBe false
+            }
+        }
     }
 })

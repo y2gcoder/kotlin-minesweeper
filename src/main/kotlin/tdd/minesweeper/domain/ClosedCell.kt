@@ -17,5 +17,9 @@ data class ClosedCell(
         return NumberCell(adjacentMines)
     }
 
+    override fun isExpandableToAdjacent(): Boolean {
+        return !hasMine() && adjacentMines == AdjacentMines(0)
+    }
+
     fun withAdjacentMines(newAdjacentMines: AdjacentMines): ClosedCell = this.copy(adjacentMines = newAdjacentMines)
 }

@@ -8,4 +8,6 @@ interface Cell {
     fun hasMine(): Boolean
 
     fun open(): Cell
+
+    fun isExpandableToAdjacent(): Boolean
 }

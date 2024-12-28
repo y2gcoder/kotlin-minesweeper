@@ -8,4 +8,6 @@ object MineCell : Cell {
     override fun hasMine(): Boolean = true
 
     override fun open(): Cell = this
+
+    override fun isExpandableToAdjacent(): Boolean = false
 }

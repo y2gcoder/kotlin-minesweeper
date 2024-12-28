@@ -33,7 +33,7 @@ class ClosedCellTest : BehaviorSpec({
         }
     }
 
-    given("지뢰가 있는 닫힌 셀을") {
+    given("지뢰가 있는 닫힌 셀은") {
         val sut =
             ClosedCell(
                 hasMine = true,
@@ -44,6 +44,14 @@ class ClosedCellTest : BehaviorSpec({
 
             then("지뢰 셀이 된다") {
                 result.shouldBeInstanceOf<MineCell>()
+            }
+        }
+
+        `when`("지뢰를 가지고 있으므로") {
+            val result = sut.isExpandableToAdjacent()
+
+            then("확장해서 열 수 없는 상태다") {
+                result shouldBe false
             }
         }
     }
@@ -62,6 +70,30 @@ class ClosedCellTest : BehaviorSpec({
 
                     result.adjacentMines shouldBe sut.adjacentMines
                 }
+            }
+        }
+    }
+
+    given("인접한 지뢰가 있는 닫힌 셀은") {
+        val sut = ClosedCell(adjacentMines = 1)
+
+        `when`("주변에 지뢰가 있으므로") {
+            val result = sut.isExpandableToAdjacent()
+
+            then("확장해서 열 수 없는 상태다") {
+                result shouldBe false
+            }
+        }
+    }
+
+    given("인접한 지뢰가 없는 닫힌 셀은") {
+        val sut = ClosedCell()
+
+        `when`("주변에 지뢰가 없으므로") {
+            val result = sut.isExpandableToAdjacent()
+
+            then("확장해서 열 수 있는 상태다") {
+                result shouldBe true
             }
         }
     }
