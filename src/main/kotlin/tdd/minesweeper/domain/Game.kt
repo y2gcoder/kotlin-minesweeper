@@ -2,7 +2,20 @@ package tdd.minesweeper.domain
 
 import tdd.minesweeper.domain.dsl.board
 
-class Game(val board: Board) {
+class Game(private val countOfMines: Int, board: Board) {
+    var board = board
+        private set
+
+    fun open(location: Location) {
+        board = board.open(location)
+    }
+
+    fun state(): GameState {
+        val countOfClosed = board.countOfClosed()
+
+        return if (countOfMines == countOfClosed) GameState.WIN else GameState.CONTINUE
+    }
+
     companion object {
         fun from(
             height: Int,
@@ -15,7 +28,7 @@ class Game(val board: Board) {
                     width(width)
                     countOfMines(countOfMines)
                 }
-            return Game(board)
+            return Game(countOfMines, board)
         }
     }
 }
