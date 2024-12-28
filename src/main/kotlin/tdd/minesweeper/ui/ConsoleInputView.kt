@@ -29,6 +29,7 @@ object ConsoleInputView : InputView {
         val input = readln().trim()
         val split = input.split(",")
         val numbers = split.map { it.trim().toInt() }
+        println()
 
         return Location(
             row = numbers[0],
