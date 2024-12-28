@@ -10,11 +10,12 @@ class Game(private val countOfMines: Int, board: Board) {
         board = board.open(location)
     }
 
-    fun state(): GameState {
-        val countOfClosed = board.countOfClosed()
-
-        return if (countOfMines == countOfClosed) GameState.WIN else GameState.CONTINUE
-    }
+    fun state(): GameState =
+        when {
+            board.countOfMineOpened() > 0 -> GameState.LOSE
+            countOfMines == board.countOfClosed() -> GameState.WIN
+            else -> GameState.CONTINUE
+        }
 
     companion object {
         fun from(

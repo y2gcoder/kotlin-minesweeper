@@ -90,4 +90,47 @@ class GameTest : BehaviorSpec({
             }
         }
     }
+
+    given("보드에 열린 지뢰 셀이 하나 이상 존재하면") {
+        val board =
+            board {
+                height(2)
+                width(2)
+                countOfMines(3)
+                mineAt(1, 1)
+                mineAt(1, 2)
+                mineAt(2, 1)
+                openAt(1, 1)
+            }
+        val sut = Game(countOfMines = 3, board = board)
+
+        `when`("게임은") {
+            val result: GameState = sut.state()
+
+            then("패배한 것이다") {
+                result shouldBe GameState.LOSE
+            }
+        }
+    }
+
+    given("보드에 닫힌 셀의 수가 총 지뢰 수보다 많고 열린 지뢰 셀이 없으면") {
+        val board =
+            board {
+                height(2)
+                width(2)
+                countOfMines(3)
+                mineAt(1, 1)
+                mineAt(1, 2)
+                mineAt(2, 1)
+            }
+        val sut = Game(countOfMines = 3, board = board)
+
+        `when`("게임은") {
+            val result: GameState = sut.state()
+
+            then("계속할 수 있다") {
+                result shouldBe GameState.CONTINUE
+            }
+        }
+    }
 })
