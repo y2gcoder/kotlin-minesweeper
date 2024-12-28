@@ -8,6 +8,8 @@ data class Board(
     val cells: Cells,
     private val shouldOpenLocationFinder: ShouldOpenLocationFinder = DefaultShouldOpenLocationFinder(),
 ) {
+    fun countOfClosed(): Int = cells.count { !it.isOpen() }
+
     fun open(location: Location): Board {
         validateLocation(location)
 

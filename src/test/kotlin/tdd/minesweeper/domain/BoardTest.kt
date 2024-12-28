@@ -34,6 +34,14 @@ class BoardTest : BehaviorSpec({
                 mineAt(5, 1)
             }
 
+        `when`("닫힌 셀 수를 계산하면") {
+            val result = sut.countOfClosed()
+
+            then("결과는 25개다") {
+                result shouldBe 25
+            }
+        }
+
         `when`("보드 내에 없는 위치의 셀을 열면") {
             val location = Location(0, 0)
 
