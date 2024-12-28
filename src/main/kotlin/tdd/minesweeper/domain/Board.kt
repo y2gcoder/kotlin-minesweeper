@@ -10,6 +10,8 @@ data class Board(
 ) {
     fun countOfClosed(): Int = cells.count { !it.isOpen() }
 
+    fun countOfMineOpened(): Int = cells.count { it is MineCell }
+
     fun open(location: Location): Board {
         validateLocation(location)
 

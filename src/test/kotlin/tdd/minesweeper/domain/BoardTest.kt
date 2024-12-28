@@ -69,6 +69,10 @@ class BoardTest : BehaviorSpec({
                     }
                 result.cells shouldContainExactly expected.cells
             }
+
+            then("열린 지뢰 셀 수는 1개다") {
+                result.countOfMineOpened() shouldBe 1
+            }
         }
 
         `when`("이웃한 8방향 중에 지뢰가 있는 셀을 열면") {
