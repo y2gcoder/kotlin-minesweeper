@@ -124,7 +124,7 @@ class BoardBuilderTest : BehaviorSpec({
                 result.cells.filter { it.hasMine() }.size shouldBe 5
 
                 mineLocations.forEach { location ->
-                    val cell = result.cells[(location.row - 1) * width + (location.col - 1)]
+                    val cell = result.cells[location.toIndex(width)]
                     cell.hasMine() shouldBe true
                 }
             }
@@ -179,7 +179,7 @@ class BoardBuilderTest : BehaviorSpec({
                         Location(4, 3),
                     )
                 mineLocations.forEach { location ->
-                    val cell = result.cells[(location.row - 1) * width + (location.col - 1)]
+                    val cell = result.cells[location.toIndex(width)]
                     cell.hasMine() shouldBe true
                 }
             }
@@ -205,7 +205,7 @@ class BoardBuilderTest : BehaviorSpec({
                         Location(1, 4),
                     )
                 mineLocations.forEach { location ->
-                    val cell = result.cells[(location.row - 1) * width + (location.col - 1)]
+                    val cell = result.cells[location.toIndex(width)]
                     cell.hasMine() shouldBe true
                 }
             }
@@ -237,7 +237,7 @@ class BoardBuilderTest : BehaviorSpec({
                     )
 
                 mineLocations.forEach { location ->
-                    val cell = result.cells[(location.row - 1) * width + (location.col - 1)]
+                    val cell = result.cells[location.toIndex(width)]
                     cell.hasMine() shouldBe true
                 }
             }
@@ -269,7 +269,7 @@ class BoardBuilderTest : BehaviorSpec({
                     )
 
                 mineLocations.forEach { location ->
-                    val cell = result.cells[(location.row - 1) * width + (location.col - 1)]
+                    val cell = result.cells[location.toIndex(width)]
                     cell.hasMine() shouldBe true
                 }
             }
@@ -301,7 +301,7 @@ class BoardBuilderTest : BehaviorSpec({
                 result.cells.filter { it.isOpen() }.size shouldBe 5
 
                 openLocations.forEach { location ->
-                    val cell = result.cells[(location.row - 1) * width + (location.col - 1)]
+                    val cell = result.cells[location.toIndex(width)]
                     cell.isOpen() shouldBe true
                 }
             }

@@ -44,7 +44,7 @@ class DefaultBoardCellsCreatorTest : BehaviorSpec({
                 result.filter { it.hasMine() }.size shouldBe 5
 
                 inputManualMineLocations.forEach { location ->
-                    val cell = result[(location.row - 1) * area.width + (location.col - 1)]
+                    val cell = result[location.toIndex(area.width)]
                     cell.hasMine() shouldBe true
                 }
             }
@@ -62,7 +62,7 @@ class DefaultBoardCellsCreatorTest : BehaviorSpec({
 
                 for (row in 1..area.height) {
                     for (col in 1..area.width) {
-                        val cellIndex = (row - 1) * area.width + (col - 1)
+                        val cellIndex = Location(row, col).toIndex(area.width)
                         val cell = result[cellIndex]
                         val expectedMineCount = expectedAdjacentMines[row - 1][col - 1]
 
@@ -91,7 +91,7 @@ class DefaultBoardCellsCreatorTest : BehaviorSpec({
                 result.filter { it.hasMine() }.size shouldBe 5
 
                 inputManualMineLocations.forEach { location ->
-                    val cell = result[(location.row - 1) * area.width + (location.col - 1)]
+                    val cell = result[location.toIndex(area.width)]
                     cell.hasMine() shouldBe true
                 }
             }
@@ -113,7 +113,7 @@ class DefaultBoardCellsCreatorTest : BehaviorSpec({
                 result.filter { it.hasMine() }.size shouldBe 5
 
                 inputManualMineLocations.take(5).forEach { location ->
-                    val cell = result[(location.row - 1) * area.width + (location.col - 1)]
+                    val cell = result[location.toIndex(area.width)]
                     cell.hasMine() shouldBe true
                 }
             }
@@ -136,7 +136,7 @@ class DefaultBoardCellsCreatorTest : BehaviorSpec({
                 result.filter { it.hasMine() }.size shouldBe 5
 
                 inputManualMineLocations.filterNot { it == invalidMineLocation }.forEach { location ->
-                    val cell = result[(location.row - 1) * area.width + (location.col - 1)]
+                    val cell = result[location.toIndex(area.width)]
                     cell.hasMine() shouldBe true
                 }
             }

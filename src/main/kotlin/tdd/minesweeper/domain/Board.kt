@@ -4,12 +4,12 @@ data class Board(val area: Area, val cells: Cells) {
     fun open(location: Location): Board {
         validateLocation(location)
 
-        val locationIndex = (location.row - 1) * area.width + (location.col - 1)
+        val locationIndex = location.toIndex(area.width)
 
-        val mutableCells = cells.toMutableList()
-        mutableCells[locationIndex] = mutableCells[locationIndex].open()
+        val openedCells = cells.toMutableList()
+        openedCells[locationIndex] = openedCells[locationIndex].open()
 
-        return this.copy(cells = Cells(mutableCells.toList()))
+        return this.copy(cells = Cells(openedCells.toList()))
     }
 
     private fun validateLocation(location: Location) {
@@ -21,9 +21,9 @@ data class Board(val area: Area, val cells: Cells) {
     private fun allLocations(): List<Location> {
         return (0 until area.height * area.width)
             .map {
-                Location(
-                    row = (it / area.width) + 1,
-                    col = (it % area.width) + 1,
+                Location.from(
+                    index = it,
+                    width = area.width,
                 )
             }
     }

@@ -47,7 +47,7 @@ class BoardTest : BehaviorSpec({
             val result = sut.open(location)
 
             then("해당 셀만 열린다") {
-                val expectedBoard =
+                val expected =
                     board {
                         height(5)
                         width(5)
@@ -59,7 +59,7 @@ class BoardTest : BehaviorSpec({
                         mineAt(5, 1)
                         openAt(1, 4)
                     }
-                result.cells shouldContainExactly expectedBoard.cells
+                result.cells shouldContainExactly expected.cells
             }
         }
 
@@ -68,7 +68,7 @@ class BoardTest : BehaviorSpec({
             val result = sut.open(location)
 
             then("해당 셀만 열린다") {
-                val expectedBoard =
+                val expected =
                     board {
                         height(5)
                         width(5)
@@ -81,7 +81,7 @@ class BoardTest : BehaviorSpec({
                         openAt(1, 1)
                     }
 
-                result.cells shouldContainExactly expectedBoard.cells
+                result.cells shouldContainExactly expected.cells
             }
         }
     }

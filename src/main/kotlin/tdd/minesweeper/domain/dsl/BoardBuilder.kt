@@ -76,9 +76,9 @@ class BoardBuilder(private val boardCellsCreator: BoardCellsCreator = DefaultBoa
         return Cells(
             cells.mapIndexed { index, cell ->
                 val location =
-                    Location(
-                        row = (index / area.width) + 1,
-                        col = (index % area.width) + 1,
+                    Location.from(
+                        index = index,
+                        width = area.width,
                     )
                 if (location in manualOpenLocations) {
                     cell.open()

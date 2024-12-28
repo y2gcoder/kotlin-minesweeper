@@ -31,9 +31,9 @@ class DefaultBoardCellsCreator : BoardCellsCreator {
     private fun createAllLocations(area: Area): List<Location> {
         return (0 until area.height * area.width)
             .map {
-                Location(
-                    row = (it / area.width) + 1,
-                    col = (it % area.width) + 1,
+                Location.from(
+                    index = it,
+                    width = area.width,
                 )
             }
     }
@@ -59,7 +59,7 @@ class DefaultBoardCellsCreator : BoardCellsCreator {
         allLocations: List<Location>,
         mineLocations: Set<Location>,
     ): List<ClosedCell> {
-        return allLocations.map { location -> if (location in mineLocations) ClosedCell(hasMine = true) else ClosedCell() }
+        return allLocations.map { location -> ClosedCell(hasMine = (location in mineLocations)) }
     }
 
     private fun markOfAdjacentMines(

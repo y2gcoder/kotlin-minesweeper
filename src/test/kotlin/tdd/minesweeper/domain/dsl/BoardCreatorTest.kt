@@ -138,7 +138,7 @@ class BoardCreatorTest : BehaviorSpec({
                 result.cells.filter { it.hasMine() }.size shouldBe 5
 
                 mineLocations.forEach { location ->
-                    val cell = result.cells[(location.row - 1) * width + (location.col - 1)]
+                    val cell = result.cells[location.toIndex(width)]
                     cell.hasMine() shouldBe true
                 }
             }
@@ -156,7 +156,7 @@ class BoardCreatorTest : BehaviorSpec({
 
                 for (row in 1..height) {
                     for (col in 1..width) {
-                        val cellIndex = (row - 1) * width + (col - 1)
+                        val cellIndex = Location(row, col).toIndex(width)
                         val cell = result.cells[cellIndex]
                         val expectedMineCount = expectedAdjacentMines[row - 1][col - 1]
 
@@ -193,7 +193,7 @@ class BoardCreatorTest : BehaviorSpec({
                         Location(4, 3),
                     )
                 mineLocations.forEach { location ->
-                    val cell = result.cells[(location.row - 1) * width + (location.col - 1)]
+                    val cell = result.cells[location.toIndex(width)]
                     cell.hasMine() shouldBe true
                 }
             }
@@ -219,7 +219,7 @@ class BoardCreatorTest : BehaviorSpec({
                         Location(1, 4),
                     )
                 mineLocations.forEach { location ->
-                    val cell = result.cells[(location.row - 1) * width + (location.col - 1)]
+                    val cell = result.cells[location.toIndex(width)]
                     cell.hasMine() shouldBe true
                 }
             }
@@ -251,7 +251,7 @@ class BoardCreatorTest : BehaviorSpec({
                     )
 
                 mineLocations.forEach { location ->
-                    val cell = result.cells[(location.row - 1) * width + (location.col - 1)]
+                    val cell = result.cells[location.toIndex(width)]
                     cell.hasMine() shouldBe true
                 }
             }
@@ -283,7 +283,7 @@ class BoardCreatorTest : BehaviorSpec({
                     )
 
                 mineLocations.forEach { location ->
-                    val cell = result.cells[(location.row - 1) * width + (location.col - 1)]
+                    val cell = result.cells[location.toIndex(width)]
                     cell.hasMine() shouldBe true
                 }
             }
@@ -315,7 +315,7 @@ class BoardCreatorTest : BehaviorSpec({
                 result.cells.filter { it.isOpen() }.size shouldBe 5
 
                 openLocations.forEach { location ->
-                    val cell = result.cells[(location.row - 1) * width + (location.col - 1)]
+                    val cell = result.cells[location.toIndex(width)]
                     cell.isOpen() shouldBe true
                 }
             }
