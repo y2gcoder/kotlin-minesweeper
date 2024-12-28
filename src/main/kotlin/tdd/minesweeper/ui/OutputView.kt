@@ -9,4 +9,6 @@ interface OutputView {
     fun displayBoard(board: Board)
 
     fun printGameEnded(state: GameState)
+
+    fun printError(errorMessage: String)
 }

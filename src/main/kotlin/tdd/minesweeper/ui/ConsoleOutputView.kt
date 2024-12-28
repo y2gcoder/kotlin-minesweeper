@@ -44,4 +44,9 @@ object ConsoleOutputView : OutputView {
             else -> {}
         }
     }
+
+    override fun printError(errorMessage: String) {
+        println(errorMessage)
+        println()
+    }
 }
